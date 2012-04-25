@@ -44,9 +44,9 @@ function appmaps_custom_meta_box() {
     $appmaps_longitude = get_option('appmaps_lng');
   }
 
-  $appmaps_api_key = get_option('appmaps_api_key');
-  $appmaps_gmaps_loc = get_option('appmaps_gmaps_loc');
-  echo '<script src="'.$appmaps_gmaps_loc.'/maps?file=api&amp;v=2&amp;key='.$appmaps_api_key.'" type="text/javascript"></script>';//&amp;key='.$appmaps_api_key.'
+  $appmaps_gmaps_lang = esc_attr( get_option('appmaps_gmaps_lang') );
+	$appmaps_gmaps_region = esc_attr( get_option('appmaps_gmaps_region') );
+	echo '<script src="http://maps.google.com/maps/api/js?sensor=false&amp;language='.$appmaps_gmaps_lang.'&amp;region='.$appmaps_gmaps_region.'" type="text/javascript"></script>';
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -61,7 +61,8 @@ Function.prototype.method = function (name, func) {
 function mapmaker () {
 	this.map;
 	this.icon0;
-	this.html;
+	this.shadow0;
+	this.infoWindow;
 	this.newpoints = new Array();
 	this.overlay;
 	this.point;
@@ -83,36 +84,35 @@ function init () {
 
 
 mapmaker.method('Create', function () {
-	this.map = new GMap2(document.getElementById("appmaps_map"), {draggableCursor: 'arrow', draggingCursor: 'arrow'});
-	this.map.setCenter(new GLatLng(<?php echo $appmaps_latitude; ?>,<?php echo $appmaps_longitude; ?>), 13);
-	this.map.addControl(new GLargeMapControl());
-	this.map.addControl(new GMapTypeControl());
+	var centerLocation = new google.maps.LatLng(<?php echo $appmaps_latitude; ?>,<?php echo $appmaps_longitude; ?>);
+  var myOptions = {
+    zoom: 13,
+    center: centerLocation,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.DEFAULT
+    }
+  }
+	this.map = new google.maps.Map(document.getElementById("appmaps_map"), myOptions);
 
-	this.map.setMapType(G_NORMAL_MAP);
+	var self = this;
+	google.maps.event.addListener(this.map, 'click', function(latlng) {
+		self.onClick(latlng);
+	});
 
-	GEvent.bind(this.map, "click", this,this.onClick);
-	this.icon0 = new GIcon();
-	this.icon0.image = "http://www.google.com/mapfiles/marker.png";
-	this.icon0.shadow = "http://www.google.com/mapfiles/shadow50.png";
-	this.icon0.iconSize = new GSize(20, 34);
-	this.icon0.shadowSize = new GSize(37, 34);
-	this.icon0.iconAnchor = new GPoint(9, 34);
-	this.icon0.infoWindowAnchor = new GPoint(9, 2);
-	this.icon0.infoShadowAnchor = new GPoint(18, 25);
 });
 
-mapmaker.method('onClick', function(overlay, point) {
+mapmaker.method('onClick', function(point) {
 	if (this.editmode == false) {
 		if(document.getElementById("appmaps_lockcheck").checked == true || document.getElementById("lockcheck").value==1) {
-			document.getElementById("appmaps_longitude").value = point.x;
-			document.getElementById("appmaps_latitude").value = point.y;
+			document.getElementById("appmaps_longitude").value = point.latLng.lng();
+			document.getElementById("appmaps_latitude").value = point.latLng.lat();
 		} else {
-			if (overlay != null) return;
 			if (this.map.getZoom() < 17) this.map.setCenter(point, this.map.getZoom() + 1 );
 		}
 	} else {
-		document.getElementById("appmaps_longitude").value = point.x;
-		document.getElementById("appmaps_latitude").value = point.y;
+		document.getElementById("appmaps_longitude").value = point.latLng.lng();
+		document.getElementById("appmaps_latitude").value = point.latLng.lat();
 		var num = this.editnum;
 		newmap.moveMarker(num);
 	}
@@ -122,7 +122,7 @@ mapmaker.method('moveMarker', function(num) {
 	this.newpoints[num][0] = document.forms.post.appmaps_latitude.value;
 	this.newpoints[num][1] = document.forms.post.appmaps_longitude.value;
 	if(num > -1) {
-		return this.newpoints[num][4].setPoint(new GLatLng(this.newpoints[num][0],this.newpoints[num][1]));
+		return this.newpoints[num][4].setPosition(new google.maps.LatLng(this.newpoints[num][0],this.newpoints[num][1]));
 	}
 });
 
@@ -130,32 +130,44 @@ mapmaker.method('editMarker', function(num) {
 	if(newmap.editmode != true) {
 		this.originalLat = this.newpoints[num][0];
 		this.originalLng = this.newpoints[num][1];
-		this.map.setCenter(new GLatLng(this.newpoints[num][0],this.newpoints[num][1]),this.map.getZoom());
+		this.map.setCenter(new google.maps.LatLng(this.newpoints[num][0],this.newpoints[num][1]),this.map.getZoom());
 		//populate form fields
 		document.forms.post.appmaps_latitude.value = this.newpoints[num][0];
 		document.forms.post.appmaps_longitude.value = this.newpoints[num][1];
-		newmap.map.closeInfoWindow();
 		this.editmode = true;
 		this.editnum = num;
 	}
 });
 
 mapmaker.method('addpoint', function(appmaps_latitude,appmaps_longitude,name,stuff) {
-	var point = new GPoint(appmaps_longitude,appmaps_latitude);
-	//Add overlay to map
+	var point = new google.maps.LatLng(appmaps_latitude, appmaps_longitude);
 	var marker = newmap.createMarker(point,this.icon0,stuff);
-	this.map.addOverlay(marker);
 	var newpoint = new Array(appmaps_latitude,appmaps_longitude,name,stuff,marker);
 	this.newpoints[this.newpoints.length] = newpoint;
 	return false;
 });
 
 mapmaker.method('createMarker', function(point, icon, stuff) {
-	var html = '<div id="popup">' + stuff + '<\/div>';
-	var marker = new GMarker(point, icon);
-	GEvent.addListener(marker, "click", function() {
-		marker.openInfoWindowHtml(html);
+	var marker = new google.maps.Marker({
+    map: this.map,
+    position: point,
+    //draggable: true,
+    //icon: icon,
+    //shadow: this.shadow0
 	});
+
+	var infoWindow = new google.maps.InfoWindow({
+		maxWidth: 270,
+		content: stuff,
+		disableAutoPan: false
+	});
+	
+	infoWindow.open(this.map, marker);
+	
+	google.maps.event.addListener(marker, 'click', function() {
+		infoWindow.open(this.map, marker);
+	});
+	
 	return marker;
 });
 

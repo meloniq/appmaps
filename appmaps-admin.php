@@ -8,39 +8,12 @@
     update_option('appmaps_active', $_POST['appmaps_active']);
     update_option('appmaps_lat', $_POST['appmaps_lat']);
     update_option('appmaps_lng', $_POST['appmaps_lng']);
-  	update_option('appmaps_api_key', $_POST['appmaps_api_key']);
-  	update_option('appmaps_gmaps_loc', $_POST['appmaps_gmaps_loc']);
+  	update_option('appmaps_gmaps_lang', $_POST['appmaps_gmaps_lang']);
+  	update_option('appmaps_gmaps_region', $_POST['appmaps_gmaps_region']);
     
     echo '<div class="updated"><p><strong>' . __('Settings saved', 'appmaps') . '</strong></p></div>';
   }
 
-//google maps locations
-	$gmaps_domains = array( 'http://maps.google.com', 
-                          'http://maps.google.at',
-                          'http://maps.google.com.au',
-                          'http://maps.google.com.ba',
-                          'http://maps.google.be',
-                          'http://maps.google.com.br',
-                          'http://maps.google.ca',
-                          'http://maps.google.ch',
-                          'http://maps.google.cz',
-                          'http://maps.google.de',
-                          'http://maps.google.dk',
-                          'http://maps.google.es',
-                          'http://maps.google.fi',
-                          'http://maps.google.fr',
-                          'http://maps.google.it',
-                          'http://maps.google.co.jp',
-                          'http://maps.google.nl',
-                          'http://maps.google.no',
-                          'http://maps.google.co.nz',
-                          'http://maps.google.pl',
-                          'http://maps.google.ru',
-                          'http://maps.google.se',
-                          'http://maps.google.tw',
-                          'http://maps.google.co.th',
-                          'http://maps.google.co.uk'
-                          );
 
 	?>	
 <script type="text/javascript">
@@ -95,28 +68,19 @@
               </td>
             </tr>
             <tr>
-              <td><?php _e('Google Maps API Key', 'appmaps'); ?></td>
+              <td><?php _e('Google Maps Language', 'appmaps'); ?></td>
               <td>
-                <input type="text" value="<?php echo get_option('appmaps_api_key'); ?>" style="min-width:500px;" id="appmaps_api_key" name="appmaps_api_key" /><br />
-                <small><?php _e('Get free API key for', 'appmaps'); ?> <a href="http://code.google.com/apis/maps/documentation/javascript/v2/introduction.html#Obtaining_Key" target="_new" title=""><?php _e('Google Maps','appmaps') ?></a>.</small>
+                <input type="text" value="<?php echo get_option('appmaps_gmaps_lang'); ?>" style="min-width:500px;" id="appmaps_gmaps_lang" name="appmaps_gmaps_lang" /><br />
+                <small><?php _e('Find the list of supported language codes', 'appmaps'); ?> <a href="http://spreadsheets.google.com/pub?key=p9pdwsai2hDMsLkXsoM05KQ&gid=1" target="_new" title=""><?php _e('here','appmaps') ?></a>.</small>
+                <br /><small><?php _e('The Google Maps API uses the browsers language setting when displaying textual info on the map. In most cases, this is preferable and you should not need to override this setting. However, if you wish to change the Maps API to ignore the browsers language setting and force it to display info in a particular language, enter your two character region code here (i.e. Japanese is ja).', 'appmaps'); ?></small>
               </td>
             </tr>
             <tr>
-              <td><?php _e('Google Maps Location', 'appmaps'); ?></td>
+              <td><?php _e('Google Maps Region', 'appmaps'); ?></td>
               <td>
-                <select name="appmaps_gmaps_loc" id="appmaps_gmaps_loc">
-                <?php 
-                  foreach($gmaps_domains as $key){
-                    if($key == get_option('appmaps_gmaps_loc')){ 
-                      $selected = 'selected="selected"'; 
-                    }else{ 
-                      $selected = ''; 
-                    }
-                    echo '<option value="'.$key.'" '.$selected.'>'.$key.'</option>';
-                  } 
-                ?>
-                </select><br />
-                <small><?php _e('Default location of map.', 'appmaps'); ?></small>
+                <input type="text" value="<?php echo get_option('appmaps_gmaps_region'); ?>" style="min-width:500px;" id="appmaps_gmaps_region" name="appmaps_gmaps_region" /><br />
+                <small><?php _e('Find your two-letter ISO 3166-1 region code', 'appmaps'); ?> <a href="http://en.wikipedia.org/wiki/ISO_3166-1" target="_new" title=""><?php _e('here','appmaps') ?></a>.</small>
+                <br /><small><?php _e('Enter your country\'s two-letter region code here to properly display map locations. (i.e. Someone enters the location "Toledo", it\'s based off the default region (US) and will display "Toledo, Ohio". With the region code set to "ES" (Spain), the results will show "Toledo, Spain.")', 'appmaps'); ?></small>
               </td>
             </tr>
           </tbody>

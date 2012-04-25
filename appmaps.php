@@ -4,7 +4,7 @@
 	Plugin URI: http://blog.meloniq.net/donate/
 	Description: Disables automatic updating geolocation in ClassiPress theme, and insert new box with map in admin to manually place marker.
 	Author: MELONIQ.NET
-	Version: 1.0
+	Version: 1.1
 	Author URI: http://blog.meloniq.net
 */
 
@@ -12,9 +12,9 @@
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You are not allowed to call this page directly.'); }
 
 global $appmaps_dbversion;
-$appmaps_version = '1.0';
-define('APPMAPS_VERSION', '1.0');
-$appmaps_dbversion = '10';
+$appmaps_version = '1.1';
+define('APPMAPS_VERSION', '1.1');
+$appmaps_dbversion = '11';
 // Init options & tables during activation & deregister init option
 register_activation_hook( plugin_basename(__FILE__), 'appmaps_activate' );
 
@@ -55,7 +55,7 @@ if ( is_admin() ) {
 	add_action('admin_menu', 'appmaps_add_menu_links');
 } else {
 	// Add a author to the header
-	add_action('wp_head', create_function('', 'echo "\n<meta name=\'AppMaps\' content=\'http://blog.meloniq.net\' />\n";') );
+	//add_action('wp_head', create_function('', 'echo "\n<meta name=\'AppMaps\' content=\'http://blog.meloniq.net\' />\n";') );
 }
 
 /**
@@ -63,9 +63,6 @@ if ( is_admin() ) {
  */
 function appmaps_load_scripts() {
   wp_enqueue_script('jquery');
-	//wp_register_script('appmaps_tooltip', plugins_url(APPMAPS_PLUGIN_NAME.'/js/tooltip.slide.js'), array('jquery'));
-	//wp_enqueue_script('appmaps_tooltip');	
-	//wp_print_scripts('appmaps_tooltip');
 }		
 add_action('wp_print_scripts', 'appmaps_load_scripts');
 
@@ -124,12 +121,21 @@ function appmaps_install_options($appmaps_dbversion) {
 	
   //If fresh installation, save defaults
 	if(!$appmaps_saved_dbversion){
+
   	update_option('appmaps_db_version', $appmaps_dbversion);
   	update_option('appmaps_active', 'yes');
-  	update_option('appmaps_lat', '12.927105');
-  	update_option('appmaps_lng', '100.875642');
-  	update_option('appmaps_gmaps_loc', 'http://maps.google.co.th');
-  	update_option('appmaps_api_key', 'Paste here Your API key');
+  	update_option('appmaps_lat', '49.99782515937576');
+  	update_option('appmaps_lng', '19.436830520629883');
+  	update_option('appmaps_gmaps_lang', 'en');
+  	update_option('appmaps_gmaps_region', 'PL');
+
+	} else if($appmaps_saved_dbversion < 11) {
+
+  	update_option('appmaps_gmaps_lang', 'en');
+  	update_option('appmaps_gmaps_region', 'PL');
+  	delete_option('appmaps_gmaps_loc');
+  	delete_option('appmaps_api_key');
+
 	}
 
   //Update DB version

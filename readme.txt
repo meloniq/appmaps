@@ -1,10 +1,10 @@
 === AppMaps ===
-Contributors: meloniq
+Contributors: meloniq, appthemes
 Donate link: http://blog.meloniq.net/donate/
 Tags: appthemes, classipress, google, map, maps, google maps
 Requires at least: 3.0
-Tested up to: 3.3.1
-Stable tag: 1.0
+Tested up to: 3.3.2
+Stable tag: 1.1
 
 Disables automatic updating geolocation in ClassiPress theme, and insert new box with map in admin to manually place marker.
 
@@ -30,6 +30,9 @@ E-mail address You will find on <a href="http://blog.meloniq.net/kontakt/">conta
 3. Go to "Settings->AppMaps" menu and fill settings.
 
 == Changelog ==
+
+= 1.1 =
+* Changed to use Google Maps API v3
 
 = 1.0 =
 * Initial release
