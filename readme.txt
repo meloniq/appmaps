@@ -2,8 +2,8 @@
 Contributors: meloniq, appthemes
 Donate link: http://blog.meloniq.net/donate/
 Tags: appthemes, classipress, google, map, maps, google maps
-Requires at least: 3.0
-Tested up to: 3.3.2
+Requires at least: 3.3
+Tested up to: 3.5.1
 Stable tag: 1.1
 
 Disables automatic updating geolocation in ClassiPress theme, and insert new box with map in admin to manually place marker.
