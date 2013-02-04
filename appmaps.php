@@ -16,29 +16,17 @@ if ( ! function_exists( 'add_action' ) )
 	die( 'Whoops! You shouldn\'t be doing that.' );
 
 
+/**
+ * Plugin version and textdomain constants
+ */
 define( 'APPMAPS_VERSION', '1.1' );
 define( 'APPMAPS_TD', 'appmaps' );
-// Init options & tables during activation & deregister init option
-register_activation_hook( plugin_basename(__FILE__), 'appmaps_activate' );
 
-/* PLUGIN and WP-CONTENT directory constants if not already defined */
-if ( ! defined( 'WP_PLUGIN_URL' ) )
-	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-if ( ! defined( 'WP_PLUGIN_DIR' ) )
-	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
-if ( ! defined( 'WP_CONTENT_URL' ) )
-	define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
-if ( ! defined( 'WP_CONTENT_DIR' ) )
-	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 
-if ( ! defined( 'APPMAPS_PLUGIN_BASENAME' ) )
-	define( 'APPMAPS_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-if ( ! defined( 'APPMAPS_PLUGIN_NAME' ) )
-	define( 'APPMAPS_PLUGIN_NAME', trim( dirname( APPMAPS_PLUGIN_BASENAME ), '/' ) );
-if ( ! defined( 'APPMAPS_PLUGIN_DIR' ) )
-	define( 'APPMAPS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . APPMAPS_PLUGIN_NAME );
-if ( ! defined( 'APPMAPS_PLUGIN_URL' ) )
-	define( 'APPMAPS_PLUGIN_URL', WP_PLUGIN_URL . '/' . APPMAPS_PLUGIN_NAME );
+/**
+ * Process actions on plugin activation
+ */
+register_activation_hook( plugin_basename( __FILE__ ), 'appmaps_activate' );
 
 
 /**
@@ -51,14 +39,6 @@ load_plugin_textdomain( APPMAPS_TD, false, dirname( plugin_basename( __FILE__ ) 
  * Load functions
  */
 include_once( dirname( __FILE__ ) . '/appmaps-functions.php');
-
-
-/**
- * Initialize admin menu
- */
-if ( is_admin() ) {
-	add_action( 'admin_menu', 'appmaps_add_menu_links' );
-}
 
 
 /**
@@ -83,7 +63,7 @@ add_action( 'admin_enqueue_scripts', 'appmaps_load_admin_scripts' );
  * Load frontend styles
  */
 function appmaps_load_styles() {
-	wp_register_style( 'appmaps_style', plugins_url( APPMAPS_PLUGIN_NAME.'/style.css' ) );
+	wp_register_style( 'appmaps_style', plugins_url( 'style.css', __FILE__ ) );
 	wp_enqueue_style( 'appmaps_style' );
 }
 //add_action( 'wp_print_styles', 'appmaps_load_styles' );
@@ -93,7 +73,7 @@ function appmaps_load_styles() {
  * Load backend styles
  */
 function appmaps_load_admin_styles() {
-	wp_register_style( 'appmaps_admin_style', plugins_url( APPMAPS_PLUGIN_NAME.'/admin-style.css' ) );
+	wp_register_style( 'appmaps_admin_style', plugins_url( 'admin-style.css', __FILE__ ) );
 	wp_enqueue_style( 'appmaps_admin_style' );
 }
 add_action( 'admin_enqueue_scripts', 'appmaps_load_admin_styles' );
@@ -106,6 +86,7 @@ function appmaps_add_menu_links() {
 
 	add_options_page( __( 'AppMaps', APPMAPS_TD ), __( 'AppMaps', APPMAPS_TD ), 'administrator', 'appmaps', 'appmaps_menu_settings' );
 }
+add_action( 'admin_menu', 'appmaps_add_menu_links' );
 
 
 /**

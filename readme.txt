@@ -31,6 +31,10 @@ E-mail address You will find on <a href="http://blog.meloniq.net/kontakt/">conta
 
 == Changelog ==
 
+= 1.2 =
+* Text domain represented by constant APPMAPS_TD
+* Removed WP 2.8 compatibility constants
+
 = 1.1 =
 * Changed to use Google Maps API v3
 
