@@ -16,10 +16,8 @@ if ( ! function_exists( 'add_action' ) )
 	die( 'Whoops! You shouldn\'t be doing that.' );
 
 
-global $appmaps_dbversion;
-$appmaps_version = '1.1';
 define( 'APPMAPS_VERSION', '1.1' );
-$appmaps_dbversion = '11';
+define( 'APPMAPS_TD', 'appmaps' );
 // Init options & tables during activation & deregister init option
 register_activation_hook( plugin_basename(__FILE__), 'appmaps_activate' );
 
@@ -46,7 +44,7 @@ if ( ! defined( 'APPMAPS_PLUGIN_URL' ) )
 /**
  * Load Text-Domain
  */
-load_plugin_textdomain( 'appmaps', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+load_plugin_textdomain( APPMAPS_TD, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 
 /**
@@ -106,7 +104,7 @@ add_action( 'admin_enqueue_scripts', 'appmaps_load_admin_styles' );
  */
 function appmaps_add_menu_links() {
 
-	add_options_page( __( 'AppMaps', 'appmaps' ), __( 'AppMaps', 'appmaps' ), 'administrator', 'appmaps', 'appmaps_menu_settings' );
+	add_options_page( __( 'AppMaps', APPMAPS_TD ), __( 'AppMaps', APPMAPS_TD ), 'administrator', 'appmaps', 'appmaps_menu_settings' );
 }
 
 

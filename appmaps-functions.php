@@ -1,6 +1,5 @@
 <?php
 
-$appmaps_key = 'appmaps';
 
 /**
  * Disable automatic geocoding
@@ -19,7 +18,7 @@ add_action( 'appthemes_init', 'appmaps_disable_geocoding' );
  */
 function appmaps_setup_meta_box() {
 	if ( get_option('appmaps_active') == 'yes' ) {
-		add_meta_box( 'appmaps-meta-box', __( 'Listing location', 'appmaps' ), 'appmaps_custom_meta_box', 'ad_listing', 'normal', 'high' );
+		add_meta_box( 'appmaps-meta-box', __( 'Listing location', APPMAPS_TD ), 'appmaps_custom_meta_box', 'ad_listing', 'normal', 'high' );
 	}
 }
 add_action( 'admin_menu', 'appmaps_setup_meta_box' );
@@ -35,18 +34,19 @@ function appmaps_custom_meta_box() {
 	wp_nonce_field( basename( __FILE__ ), 'appmaps_wpnonce', false, true );
 
 	$post_id = $post->ID;
-	$appmaps_latlng = appmaps_get_geocode( $post_id );
-	if ( $appmaps_latlng ) {
-		$appmaps_latitude = $appmaps_latlng['lat'];
-		$appmaps_longitude = $appmaps_latlng['lng'];
+	$latlng = appmaps_get_geocode( $post_id );
+	if ( $latlng ) {
+		$latitude = $latlng['lat'];
+		$longitude = $latlng['lng'];
 	} else {
-		$appmaps_latitude = get_option('appmaps_lat');
-		$appmaps_longitude = get_option('appmaps_lng');
+		$latitude = get_option('appmaps_lat');
+		$longitude = get_option('appmaps_lng');
 	}
 
-	$appmaps_gmaps_lang = esc_attr( get_option('appmaps_gmaps_lang') );
-	$appmaps_gmaps_region = esc_attr( get_option('appmaps_gmaps_region') );
-	echo '<script src="http://maps.google.com/maps/api/js?sensor=false&amp;language='.$appmaps_gmaps_lang.'&amp;region='.$appmaps_gmaps_region.'" type="text/javascript"></script>';
+	$gmaps_lang = esc_attr( get_option('appmaps_gmaps_lang') );
+	$gmaps_region = esc_attr( get_option('appmaps_gmaps_region') );
+	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region ), 'http://maps.google.com/maps/api/js' );
+	echo '<script src="' . esc_url( $api_url ) . '" type="text/javascript"></script>';
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -77,13 +77,13 @@ function init() {
 	newmap = new mapmaker();
 	newmap.Create();
 
-	newmap.addpoint("<?php echo $appmaps_latitude; ?>","<?php echo $appmaps_longitude; ?>","<?php _e( 'Move marker', 'appmaps' ); ?>","<?php _e( 'Move this marker to right place', 'appmaps' ); ?>");
+	newmap.addpoint("<?php echo $latitude; ?>","<?php echo $longitude; ?>","<?php _e( 'Move marker', APPMAPS_TD ); ?>","<?php _e( 'Move this marker to right place', APPMAPS_TD ); ?>");
 	newmap.editMarker(0);
 };
 
 
 mapmaker.method('Create', function() {
-	var centerLocation = new google.maps.LatLng(<?php echo $appmaps_latitude; ?>,<?php echo $appmaps_longitude; ?>);
+	var centerLocation = new google.maps.LatLng(<?php echo $latitude; ?>,<?php echo $longitude; ?>);
 	var myOptions = {
 		zoom: 13,
 		center: centerLocation,
@@ -199,13 +199,13 @@ div#appmaps_map {
 	<table class="form-table ad-meta-table">
 
 		<tr>
-			<th style="width:20%"><label for="appmaps_latitude"><?php _e('Latitude:', 'appmaps'); ?></label></th>
-			<td><input type="text" value="<?php echo $appmaps_latitude; ?>" class="text" name="appmaps_latitude" id="appmaps_latitude"></td>
+			<th style="width:20%"><label for="appmaps_latitude"><?php _e( 'Latitude:', APPMAPS_TD ); ?></label></th>
+			<td><input type="text" value="<?php echo esc_attr( $latitude ); ?>" class="text" name="appmaps_latitude" id="appmaps_latitude"></td>
 		</tr>
 
 		<tr>
-			<th style="width:20%"><label for="appmaps_longitude"><?php _e('Longitude:', 'appmaps'); ?></label></th>
-			<td><input type="text" value="<?php echo $appmaps_longitude; ?>" class="text" name="appmaps_longitude" id="appmaps_longitude"></td>
+			<th style="width:20%"><label for="appmaps_longitude"><?php _e( 'Longitude:', APPMAPS_TD ); ?></label></th>
+			<td><input type="text" value="<?php echo esc_attr( $longitude ); ?>" class="text" name="appmaps_longitude" id="appmaps_longitude"></td>
 		</tr>
 
 		<tr>	
