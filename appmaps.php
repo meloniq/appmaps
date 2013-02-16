@@ -47,7 +47,7 @@ include_once( dirname( __FILE__ ) . '/appmaps-functions.php');
 function appmaps_load_scripts() {
 	wp_enqueue_script( 'jquery' );
 }
-add_action( 'wp_print_scripts', 'appmaps_load_scripts' );
+add_action( 'wp_enqueue_scripts', 'appmaps_load_scripts' );
 
 
 /**
@@ -66,7 +66,7 @@ function appmaps_load_styles() {
 	wp_register_style( 'appmaps_style', plugins_url( 'style.css', __FILE__ ) );
 	wp_enqueue_style( 'appmaps_style' );
 }
-//add_action( 'wp_print_styles', 'appmaps_load_styles' );
+//add_action( 'wp_enqueue_scripts', 'appmaps_load_styles' );
 
 
 /**
