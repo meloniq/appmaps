@@ -1,11 +1,11 @@
 <?php
 /*
 	Plugin Name: AppMaps
-	Plugin URI: http://blog.meloniq.net/donate/
+	Plugin URI: https://blog.meloniq.net/donate/
 	Description: Disables automatic updating geolocation in ClassiPress theme, and insert new box with map in admin to manually place marker.
 	Author: MELONIQ.NET
-	Version: 1.1
-	Author URI: http://blog.meloniq.net
+	Version: 1.2
+	Author URI: https://blog.meloniq.net
 */
 
 

@@ -46,7 +46,7 @@ function appmaps_custom_meta_box() {
 
 	$gmaps_lang = esc_attr( get_option('appmaps_gmaps_lang') );
 	$gmaps_region = esc_attr( get_option('appmaps_gmaps_region') );
-	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region ), 'http://maps.google.com/maps/api/js' );
+	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region ), 'https://maps.google.com/maps/api/js' );
 	echo '<script src="' . esc_url( $api_url ) . '" type="text/javascript"></script>';
 ?>
 <script type="text/javascript">
@@ -289,7 +289,7 @@ function appmaps_frontend_map( $results, $post ) {
 
 	$gmaps_lang = esc_attr( get_option('appmaps_gmaps_lang') );
 	$gmaps_region = esc_attr( get_option('appmaps_gmaps_region') );
-	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region ), 'http://maps.google.com/maps/api/js' );
+	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region ), 'https://maps.google.com/maps/api/js' );
 	echo '<script src="' . esc_url( $api_url ) . '" type="text/javascript"></script>';
 ?>
 <script type="text/javascript">

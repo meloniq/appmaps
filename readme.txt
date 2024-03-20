@@ -1,10 +1,10 @@
 === AppMaps ===
 Contributors: meloniq, appthemes
-Donate link: http://blog.meloniq.net/donate/
+Donate link: https://blog.meloniq.net/donate/
 Tags: appthemes, classipress, google, map, maps, google maps
-Requires at least: 3.3
-Tested up to: 3.5.1
-Stable tag: 1.1
+Requires at least: 4.9
+Tested up to: 6.5
+Stable tag: 1.2
 
 Disables automatic updating geolocation in ClassiPress theme, and insert new box with map in admin to manually place marker.
 
@@ -19,7 +19,7 @@ Disables automatic updating geolocation in ClassiPress theme, and insert new box
 * English
 
 If You translated plugin to Your native language, please send it to me, and will attach it to next release.
-E-mail address You will find on <a href="http://blog.meloniq.net/kontakt/">contact page</a>.
+E-mail address You will find on <a href="https://blog.meloniq.net/kontakt/">contact page</a>.
 
 
 
@@ -48,7 +48,7 @@ E-mail address You will find on <a href="http://blog.meloniq.net/kontakt/">conta
 
 = Plugin doesn't work for me, what to do? =
 
-Report it with details on <a href="http://wordpress.org/tags/appmaps">support forum</a>.
+Report it with details on <a href="https://wordpress.org/tags/appmaps">support forum</a>.
 
 
 == Screenshots ==

@@ -79,7 +79,7 @@
 							<td><?php _e( 'Google Maps Region', APPMAPS_TD ); ?></td>
 							<td>
 								<input type="text" value="<?php echo get_option('appmaps_gmaps_region'); ?>" style="min-width:500px;" id="appmaps_gmaps_region" name="appmaps_gmaps_region" /><br />
-								<small><?php _e( 'Find your two-letter ISO 3166-1 region code', APPMAPS_TD ); ?> <a href="http://en.wikipedia.org/wiki/ISO_3166-1" target="_new" title=""><?php _e( 'here', APPMAPS_TD ); ?></a>.</small>
+								<small><?php _e( 'Find your two-letter ISO 3166-1 region code', APPMAPS_TD ); ?> <a href="https://en.wikipedia.org/wiki/ISO_3166-1" target="_new" title=""><?php _e( 'here', APPMAPS_TD ); ?></a>.</small>
 								<br /><small><?php _e( 'Enter your country\'s two-letter region code here to properly display map locations. (i.e. Someone enters the location "Toledo", it\'s based off the default region (US) and will display "Toledo, Ohio". With the region code set to "ES" (Spain), the results will show "Toledo, Spain.")', APPMAPS_TD ); ?></small>
 							</td>
 						</tr>
