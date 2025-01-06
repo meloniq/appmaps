@@ -2,16 +2,22 @@
 
 
 /**
- * Disable automatic geocoding
+ * Disable automatic geocoding.
+ * ClassiPress up to 3.6.5
  */
 function appmaps_disable_geocoding() {
-	if ( get_option('appmaps_active') != 'yes' )
+	if ( get_option('appmaps_active') != 'yes' ) {
 		return;
+	}
 
 	remove_action( 'added_post_meta', 'cp_do_update_geocode', 10, 4 );
 	remove_action( 'updated_post_meta', 'cp_do_update_geocode', 10, 4 );
 }
 add_action( 'appthemes_init', 'appmaps_disable_geocoding' );
+
+// ClassiPress from 4.2.5
+// NOTE: from 4.0.0 to 4.2.5 there is no option to disable geocoding
+add_filter( 'cp_maybe_geocode_address', '__return_false' );
 
 
 /**
@@ -209,9 +215,9 @@ div#appmaps_map {
 			<td><input type="text" value="<?php echo esc_attr( $longitude ); ?>" class="text" name="appmaps_longitude" id="appmaps_longitude"></td>
 		</tr>
 
-		<tr>	
+		<tr>
 			<th colspan="2" style="padding:0px;"><div id="appmaps_map"></div></th>
-		</tr>		
+		</tr>
 
 		<input type="hidden" value="1" class="check" id="appmaps_lockcheck">
 
@@ -227,31 +233,37 @@ function appmaps_save_meta_box( $post_id, $post ) {
 	global $wpdb;
 
 	// make sure something has been submitted from our nonce
-	if ( ! isset( $_POST['appmaps_wpnonce'] ) )
+	if ( ! isset( $_POST['appmaps_wpnonce'] ) ) {
 		return $post_id;
+	}
 
 	// verify this came from the our screen and with proper authorization,
 	// because save_post can be triggered at other times
-	if ( ! wp_verify_nonce( $_POST['appmaps_wpnonce'], basename( __FILE__ ) ) )
+	if ( ! wp_verify_nonce( $_POST['appmaps_wpnonce'], basename( __FILE__ ) ) ) {
 		return $post_id;
+	}
 
 	// verify if this is an auto save routine.
 	// if it is our form and it has not been submitted, dont want to do anything
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return $post_id;
+	}
 
 	// lastly check to make sure this user has permissions to save post fields
-	if ( ! current_user_can( 'edit_post', $post_id ) )
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
 		return $post_id;
+	}
 
-	if ( $post->post_type == 'revision' )
+	if ( $post->post_type == 'revision' ) {
 		return $post_id;
+	}
 
 	// update coordinates
 	if ( ! empty( $_POST['appmaps_latitude'] ) && ! empty( $_POST['appmaps_longitude'] ) ) {
 		$category = get_the_terms( $post_id, 'ad_cat' );
-		if ( ! $category || is_wp_error( $category ) )
+		if ( ! $category || is_wp_error( $category ) ) {
 			$category[0]->name = '';
+		}
 		cp_update_geocode( $post_id, $category[0]->name, $_POST['appmaps_latitude'], $_POST['appmaps_longitude'] );
 	}
 
@@ -261,22 +273,26 @@ add_action( 'save_post', 'appmaps_save_meta_box', 1, 2 );
 
 function appmaps_get_geocode( $post_id, $cat = '' ) {
 	global $wpdb;
-	$table = $wpdb->prefix . 'cp_ad_geocodes';
-	if ( $cat )
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT lat, lng FROM $table WHERE post_id = %d AND category = %s LIMIT 1", $post_id, $cat ) );
-	else
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT lat, lng FROM $table WHERE post_id = %d LIMIT 1", $post_id ) );
 
-	if ( is_object( $row ) )
+	$table = $wpdb->prefix . 'cp_ad_geocodes';
+	if ( $cat ) {
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT lat, lng FROM $table WHERE post_id = %d AND category = %s LIMIT 1", $post_id, $cat ) );
+	} else {
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT lat, lng FROM $table WHERE post_id = %d LIMIT 1", $post_id ) );
+	}
+
+	if ( is_object( $row ) ) {
 		return array( 'lat' => $row->lat, 'lng' => $row->lng );
-	else
+	} else {
 		return false;
+	}
 }
 
 
 function appmaps_frontend_map( $results, $post ) {
-	if ( ! is_page_template( 'tpl-add-new.php' ) )
+	if ( ! is_page_template( 'tpl-add-new.php' ) ) {
 		return;
+	}
 
 	$latlng = ( $post ) ? appmaps_get_geocode( $post->ID ) : false;
 	if ( $latlng ) {
@@ -463,14 +479,17 @@ add_action( 'cp_action_formbuilder', 'appmaps_frontend_map', 10, 2 );
 
 
 function appmaps_frontend_validate( $error_msg ) {
-	if ( ! is_page_template( 'tpl-add-new.php' ) )
+	if ( ! is_page_template( 'tpl-add-new.php' ) ) {
 		return $error_msg;
+	}
 
-	if ( empty( $_POST['appmaps_latitude'] ) || ! is_numeric( $_POST['appmaps_latitude'] ) )
+	if ( empty( $_POST['appmaps_latitude'] ) || ! is_numeric( $_POST['appmaps_latitude'] ) ) {
 		$error_msg[] = __( 'Error: Latitude is not specified or invalid.', APPMAPS_TD );
+	}
 
-	if ( empty( $_POST['appmaps_longitude'] ) || ! is_numeric( $_POST['appmaps_longitude'] ) )
+	if ( empty( $_POST['appmaps_longitude'] ) || ! is_numeric( $_POST['appmaps_longitude'] ) ) {
 		$error_msg[] = __( 'Error: Longitude is not specified or invalid.', APPMAPS_TD );
+	}
 
 	return $error_msg;
 }
@@ -481,12 +500,14 @@ function appmaps_frontend_save( $post_id ) {
 	$ad_id = get_post_meta( $post_id, 'cp_sys_ad_conf_id', true );
 	$ad_vals = get_option( 'cp_' . $ad_id );
 
-	if ( ! isset( $ad_vals['appmaps_latitude'] ) || ! isset( $ad_vals['appmaps_longitude'] ) )
+	if ( ! isset( $ad_vals['appmaps_latitude'] ) || ! isset( $ad_vals['appmaps_longitude'] ) ) {
 		return;
+	}
 
 	$category = get_the_terms( $post_id, 'ad_cat' );
-	if ( ! $category || is_wp_error( $category ) )
+	if ( ! $category || is_wp_error( $category ) ) {
 		$category[0]->name = '';
+	}
 
 	cp_update_geocode( $post_id, $category[0]->name, $ad_vals['appmaps_latitude'], $ad_vals['appmaps_longitude'] );
 }
