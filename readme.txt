@@ -1,10 +1,10 @@
 === AppMaps ===
 Contributors: meloniq, appthemes
 Donate link: https://blog.meloniq.net/donate/
-Tags: appthemes, classipress, google, map, maps, google maps
+Tags: appthemes, classipress, google, maps, google maps
 Requires at least: 4.9
-Tested up to: 6.5
-Stable tag: 1.2
+Tested up to: 6.7
+Stable tag: 1.3
 
 Disables automatic updating geolocation in ClassiPress theme, and insert new box with map in admin to manually place marker.
 
@@ -30,6 +30,11 @@ E-mail address You will find on <a href="https://blog.meloniq.net/kontakt/">cont
 3. Go to "Settings->AppMaps" menu and fill settings.
 
 == Changelog ==
+
+= 1.3 =
+* Rewritten settings page
+* Added option to set API Key
+* Fixed disabling geocoding on ClassiPress 4.2.5+
 
 = 1.2 =
 * Text domain represented by constant APPMAPS_TD

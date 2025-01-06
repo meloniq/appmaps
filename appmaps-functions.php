@@ -6,7 +6,7 @@
  * ClassiPress up to 3.6.5
  */
 function appmaps_disable_geocoding() {
-	if ( get_option('appmaps_active') != 'yes' ) {
+	if ( ! get_option( 'appmaps_active' ) ) {
 		return;
 	}
 
@@ -24,7 +24,7 @@ add_filter( 'cp_maybe_geocode_address', '__return_false' );
  * Add meta box on the listing edit admin page
  */
 function appmaps_setup_meta_box() {
-	if ( get_option('appmaps_active') == 'yes' ) {
+	if ( get_option( 'appmaps_active' ) ) {
 		add_meta_box( 'appmaps-meta-box', __( 'Listing location', APPMAPS_TD ), 'appmaps_custom_meta_box', 'ad_listing', 'normal', 'high' );
 	}
 }
@@ -50,9 +50,10 @@ function appmaps_custom_meta_box() {
 		$longitude = get_option('appmaps_lng');
 	}
 
+	$api_key = esc_attr( get_option('appmaps_api_key') );
 	$gmaps_lang = esc_attr( get_option('appmaps_gmaps_lang') );
 	$gmaps_region = esc_attr( get_option('appmaps_gmaps_region') );
-	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region ), 'https://maps.google.com/maps/api/js' );
+	$api_url = add_query_arg( array( 'sensor' => 'false', 'language' => $gmaps_lang, 'region' => $gmaps_region, 'key' => $api_key ), 'https://maps.google.com/maps/api/js' );
 	echo '<script src="' . esc_url( $api_url ) . '" type="text/javascript"></script>';
 ?>
 <script type="text/javascript">
